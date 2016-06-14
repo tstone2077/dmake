@@ -1,0 +1,89 @@
+#!/bin/bash
+
+configFile=$(pwd)/dconfig
+
+# Defaults
+name="tstone/tlsbash"
+version="latest"
+container_name="tlsbash"
+rootdir="$(pwd)"
+ACTION="build"
+run_options=""
+example_cfg='name="'"${USER}/$(basename $(pwd))"'"
+container_name="'"$(basename $(pwd))"'"
+version="latest"
+rootdir="'"$(pwd)"'"
+run_options='"''"'
+#run_options='"'"'-p 8081:80 -v some/path:/container/some/path'"'"
+
+usage () {
+    echo "make.sh [-c config/file/location] [build | run | quickrun | exec | stop | rm | dconfig | rmi-none]"
+    echo '
+config file (defaults to dconfig) should contain the following settings
+name    : the name of the image to build or run
+version : the version of the image to build or run
+rootdir : the root directory of the build
+
+Example of a config file:
+'"$example_cfg"
+    exit 0
+}
+
+while test $# != 0                                                                                                                                                                                                                    [1/229]
+do
+    case "$1" in
+    -h|--help)
+        usage
+        ;;
+    -c|--config=?)
+        configFile="$1"
+        ;;
+    *)
+        ACTION=$1
+        ;;
+    esac
+    shift
+done
+
+if test "$ACTION" = "dconfig"
+then
+    if test ! -e $configFile
+    then
+        echo Writing config into $configFile:
+        echo "$example_cfg"
+        echo "$example_cfg" > $configFile
+    else
+        echo "ERROR: $configFile already exists. Remove it first to regenerate it."
+    fi
+else
+    . $configFile
+fi
+
+if test "$ACTION" = "stop"
+then
+    docker stop $container_name
+fi
+if test "$ACTION" = "build"
+then
+    docker build -t $name:$version $rootdir
+fi
+if test "$ACTION" = "run"
+then
+    docker run -d -it $run_options --name $container_name $name:$version  bash
+fi
+if test "$ACTION" = "quickrun"
+then
+    docker run -it $run_options --rm $name:$version bash
+fi
+if test "$ACTION" = "rm"
+then
+    docker rm -f $container_name
+fi
+if test "$ACTION" = "exec"
+then
+    docker exec -it $container_name bash
+fi
+if test "$ACTION" = "rmi-none"
+then
+    docker rmi $(docker images | grep "^<none>" | awk '{print $3}')
+fi
