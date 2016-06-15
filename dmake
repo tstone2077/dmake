@@ -54,7 +54,7 @@ do
     shift
 done
 
-if test debug -eq 1
+if test $debug -eq 1
 then
     set -x
 fi
