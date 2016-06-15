@@ -100,7 +100,7 @@ then
 fi
 if test "$ACTION" = "run"
 then
-    docker run -d -it $run_options --name $container_name $name:$version  bash
+    docker run -d $run_options --name $container_name $name:$version
 fi
 if test "$ACTION" = "quickrun"
 then
