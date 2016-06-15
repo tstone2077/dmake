@@ -19,23 +19,32 @@ run_options='"''"'
 usage () {
     echo "make.sh [-c config/file/location] [build | run | quickrun | exec | stop | rm | dconfig | rmi-none]"
     echo '
-config file (defaults to dconfig) should contain the following settings
+config file (defaults to .dconfig) should contain the following settings
 name    : the name of the image to build or run
 version : the version of the image to build or run
 rootdir : the root directory of the build
 
-Example of a config file:
+Example of .dconfig file:
 '"$example_cfg"
     exit 0
 }
 
-while test $# != 0                                                                                                                                                                                                                    [1/229]
+debug=0
+silent=0
+while test $# != 0
 do
     case "$1" in
     -h|--help)
         usage
         ;;
+    -s|--silent=?)
+        silent=1
+        ;;
+    -d|--debug=?)
+        debug=1
+        ;;
     -c|--config=?)
+        shift
         configFile="$1"
         ;;
     *)
@@ -45,15 +54,37 @@ do
     shift
 done
 
+if test debug -eq 1
+then
+    set -x
+fi
+
 if test "$ACTION" = "dconfig"
 then
     if test ! -e $configFile
     then
         echo Writing config into $configFile:
-        echo "$example_cfg"
         echo "$example_cfg" > $configFile
+        cat $configFile
     else
-        echo "ERROR: $configFile already exists. Remove it first to regenerate it."
+        echo "$configFile already exists."
+        if test $silent -eq 0
+        then
+            echo -n "Would you like to prepend the default configuration [y/n]? "
+            read answer
+            if test "$answer" = "y"
+            then
+                tmpfile=$(mktemp)
+                echo "$example_cfg" > $tmpfile
+                cat $configFile >> $tmpfile
+                mv $tmpfile $configFile
+                cat $configFile
+            else
+                echo "You will need to remove it if you do not want to prepend to it."
+            fi
+        else
+            echo "You will need to remove it if you use the -s|--silent option"
+        fi
     fi
 else
     . $configFile
