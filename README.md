@@ -1,4 +1,4 @@
-# dmake
+#[dmake](#dmake)
 
 dmake: A script to make running and managing docker containers easier. By setting some information in the *.dmake files (container_name, name, etc), you can easily run, exec, rm, etc.
 ## *.dmake files
@@ -12,20 +12,20 @@ This will:
 1. Create a gitignore file containting the user.dmake file (see below)
 1. Create user.dmake and run.dmake files
 
-### user.dmake
+###[user.dmake](#user-dmake)
 The user.dmake file is specific to this user's environment and should not be checked into source control. It contains the variables:
 * name: the name of the docker image to build
 * container_name: the name of the container that will run
 * version: the version (tag) of the docker image to build
 * rootdir: the root directory containing the Dockerfile for building
 
-### run.dmake
+###[run.dmake](#run -dmake)
 The run.dmake file contains the command line arguments for a run command:
 * run_options: The options used in the run command (ports, envirnments, volumes, etc)
 
 Since the run.dmake files is sourced, it can be used to do other things like start dependent containers, etc. See the Advanced usage section for examples.
 
-## Simple usage
+##[Simple usage](#simple-usage)
 Current User: test_user
 Current Directory: /some/path/to/tmp
 
@@ -73,7 +73,7 @@ $ dmake rm
 tmp
 ```
 
-## Advanced usage
+##[Advanced usage](#advanced-usage)
 * Start a mysql instance for my app
 
 ```
@@ -102,7 +102,7 @@ $dmake run
 d20c3eb7d53c7d0bb09c3ea3e8e0051af315c00b4d6c8c388e75d80c03892b0a
 f7e349abc539d4755881fa7897fe96663d398cfded67ba03c007134a743f5746
 ```
-## Forwarding docker commands
+##[Forwarding docker commands](#forwarding-docker-commands)
 any command that is not a dmake command will be forwarded directly to docker:
 ```
 $dmake ps -aq
