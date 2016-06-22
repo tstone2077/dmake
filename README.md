@@ -1,7 +1,17 @@
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [dmake](#dmake)
+	- [*.dmake files](#dmake-files)
+		- [user.dmake](#user-dmake)
+		- [run.dmake](#run-dmake)
+	- [Simple usage](#simple-usage)
+	- [Advanced usage](#advanced-usage)
+	- [Forwarding docker commands](#forwarding-docker-commands)
+
 #[dmake](#dmake)
 
 dmake: A script to make running and managing docker containers easier. By setting some information in the *.dmake files (container_name, name, etc), you can easily run, exec, rm, etc.
-## *.dmake files
+##[*.dmake files](#dmake-files)
 To initialize a directory for a specific docker container, use:
 ```
 dmake init
@@ -12,14 +22,14 @@ This will:
 1. Create a gitignore file containting the user.dmake file (see below)
 1. Create user.dmake and run.dmake files
 
-###[user.dmake](#user-dmake)
+###[user dmake](#user-dmake)
 The user.dmake file is specific to this user's environment and should not be checked into source control. It contains the variables:
 * name: the name of the docker image to build
 * container_name: the name of the container that will run
 * version: the version (tag) of the docker image to build
 * rootdir: the root directory containing the Dockerfile for building
 
-###[run.dmake](#run -dmake)
+###[run dmake](#run-dmake)
 The run.dmake file contains the command line arguments for a run command:
 * run_options: The options used in the run command (ports, envirnments, volumes, etc)
 
