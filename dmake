@@ -45,6 +45,8 @@ Example of '$(basename $runConfigFile)' file:
 debug=0
 silent=0
 show_help=0
+action_executed=0
+ACTION=""
 while test $# != 0
 do
     case "$1" in
@@ -66,11 +68,19 @@ do
         configFile="$1"
         ;;
     *)
-        ACTION=$1
+        ACTION=$@
+        while test $# != 0
+        do
+            shift
+        done
         ;;
     esac
     shift
 done
+if test "$ACTION" = ""
+then
+    ACTION="build"
+fi
 
 if test $debug -eq 1
 then
@@ -109,6 +119,7 @@ fi
 ########################################
 if test "$ACTION" = "init"
 then
+    action_executed=1
     if ! test -d .git
     then
         echo "Initializing git..." > $output
@@ -143,6 +154,7 @@ fi
 ########################################
 if test "$ACTION" = "stop"
 then
+    action_executed=1
     docker stop $container_name
 fi
 
@@ -151,6 +163,7 @@ fi
 ########################################
 if test "$ACTION" = "build"
 then
+    action_executed=1
     docker build -t $name:$version $rootdir
 fi
 
@@ -159,6 +172,7 @@ fi
 ########################################
 if test "$ACTION" = "run"
 then
+    action_executed=1
     docker run -d $run_options --name $container_name $name:$version
 fi
 
@@ -167,6 +181,7 @@ fi
 ########################################
 if test "$ACTION" = "quickrun"
 then
+    action_executed=1
     docker run -it $run_options --rm $name:$version $SHELL
 fi
 
@@ -175,6 +190,7 @@ fi
 ########################################
 if test "$ACTION" = "rm"
 then
+    action_executed=1
     docker rm -f $container_name
 fi
 
@@ -183,6 +199,7 @@ fi
 ########################################
 if test "$ACTION" = "exec"
 then
+    action_executed=1
     docker exec -it $container_name $SHELL
 fi
 
@@ -191,5 +208,11 @@ fi
 ########################################
 if test "$ACTION" = "rmi-none"
 then
+    action_executed=1
     docker rmi $(docker images | grep "^<none>" | awk '{print $3}')
+fi
+
+if test $action_executed -eq 0
+then
+    docker $ACTION
 fi
