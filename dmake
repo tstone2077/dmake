@@ -14,7 +14,7 @@ ACTION="build"
 run_options=""
 
 usage () {
-    echo "dmake [-u path/to/user.config] [-r path/to/run.dconfig] [build | run | quickrun | exec | stop | rm | dconfig | rmi-none]"
+    echo "dmake [-u path/to/user.config] [-r path/to/run.dconfig] [build | run | irun | exec | stop | rm | dconfig | rmi-none]"
 
     echo '
 init:
@@ -177,9 +177,9 @@ then
 fi
 
 ########################################
-# quickrun function
+# irun function
 ########################################
-if test "$ACTION" = "quickrun"
+if test "$ACTION" = "irun"
 then
     action_executed=1
     docker run -it $run_options --rm $name:$version $SHELL
