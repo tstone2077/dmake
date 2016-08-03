@@ -14,7 +14,7 @@ ACTION="build"
 run_options=""
 
 usage () {
-    echo "dmake [-u path/to/user.config] [-r path/to/run.dconfig] [build | run | irun | exec | stop | rm | dconfig | rmi-none]"
+    echo "dmake [-u path/to/user.config] [-r path/to/run.dconfig] [build | run | irun | exec | stop | rm | init | runshell |  rmi-none]"
 
     echo '
 init:
@@ -99,7 +99,7 @@ then
     . '$userConfigFile'
 fi
 run_options='"''"'
-#run_options='"'"'-p 8081:80 -v some/path:/container/some/path'"'"
+#run_options='"'"'-p 8081:80 -v '"'"'$rootdir'"'"'/src:/root/src'"'"
 
 
 if test $show_help -eq 1
@@ -174,6 +174,15 @@ if test "$ACTION" = "run"
 then
     action_executed=1
     docker run -d $run_options --name $container_name $name:$version
+fi
+
+########################################
+# runshell function
+########################################
+if test "$ACTION" = "runshell"
+then
+    action_executed=1
+    docker run -it $run_options --name $container_name $name:$version $SHELL
 fi
 
 ########################################
