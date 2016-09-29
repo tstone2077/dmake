@@ -60,9 +60,9 @@ Step 1 : FROM ubuntu
  ---> e9ae3c220b23
 Successfully built e9ae3c220b23
 ```
-* quickrun: removes the container when exited (run --rm)
+* irun: (interactive run) removes the container when exited (run --rm)
 ```
-$ dmake quickrun
+$ dmake irun
 root@d44436304af3:/# exit
 exit
 ```
